@@ -11,7 +11,7 @@ if (!message) {
   process.exit(1);
 }
 
-const git = (...args) => execFileSync('git', args, { encoding: 'utf8' });
+const git = (...args) => execFileSync('git', args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
 
 let previous = [];
 try {
