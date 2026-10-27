@@ -21,10 +21,50 @@
     </h1>
     <p class="lead">Cómo pasamos de <em>conversar</em> con una IA a darle herramientas para que <em>trabaje</em> con nosotros.</p>
     <p class="live-note"><span class="dot" aria-hidden="true"></span> Esta web la está construyendo un agente, en vivo, frente a ustedes.</p>
+    <nav class="cta" aria-label="Secciones">
+      <a class="button" href="#muro">Escribe en el muro</a>
+    </nav>
   </header>
+
+  <section id="muro" class="panel" aria-labelledby="muro-title">
+    <h2 id="muro-title">Muro en vivo</h2>
+    <p class="panel-intro">Deja tu mensaje: aparece al instante en todas las pantallas.</p>
+    <form id="wall-form" class="wall-form" novalidate>
+      <label for="wall-text" class="visually-hidden">Tu mensaje</label>
+      <textarea id="wall-text" name="text" maxlength="140" rows="3"
+        placeholder="¿Qué te está pareciendo la charla?"></textarea>
+      <div class="form-row">
+        <fieldset class="roles">
+          <legend>Soy</legend>
+          <label><input type="radio" name="role" value="estudiante"> Estudiante</label>
+          <label><input type="radio" name="role" value="profesor"> Profesor</label>
+        </fieldset>
+        <span id="wall-count" class="counter" aria-live="polite">0/140</span>
+        <button type="submit" class="button">Publicar</button>
+      </div>
+      <p id="wall-status" class="form-status" role="status"></p>
+    </form>
+    <ul id="wall-list" class="wall-list"></ul>
+    <p id="wall-empty" class="empty">Todavía no hay mensajes. ¡Sé la primera persona en escribir!</p>
+    <button type="button" id="moderate-button" class="link-button">Moderar</button>
+  </section>
   </main>
+
+  <dialog id="admin-dialog" class="admin-dialog">
+    <form method="dialog" id="admin-form">
+      <h3>Modo moderación</h3>
+      <label for="admin-key">Clave de moderación</label>
+      <input type="password" id="admin-key" autocomplete="off" required>
+      <div class="dialog-actions">
+        <button value="cancel" formnovalidate class="link-button">Cancelar</button>
+        <button value="ok" class="button">Entrar</button>
+      </div>
+    </form>
+  </dialog>
 
   <aside class="stage-badge" id="stage-badge" aria-live="polite">Etapa … · cargando</aside>
   <script src="/site.js"></script>
+  <script src="/live.js"></script>
+  <script src="/wall.js"></script>
 </body>
 </html>
