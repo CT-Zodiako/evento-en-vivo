@@ -1,0 +1,16 @@
+{
+  "name": "evento-en-vivo",
+  "version": "1.0.0",
+  "description": "Live website for the talk \"De chat a agente\"",
+  "type": "module",
+  "main": "server.js",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test",
+    "commit": "node scripts/commit.mjs"
+  },
+  "license": "MIT"
+}
