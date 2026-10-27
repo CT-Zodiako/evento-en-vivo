@@ -9,8 +9,12 @@
   },
   "scripts": {
     "start": "node server.js",
-    "test": "node --test",
-    "commit": "node scripts/commit.mjs"
+    "test": "node --test \"test/**/*.test.js\"",
+    "commit": "node scripts/commit.mjs",
+    "qr": "node scripts/qr.mjs"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "qrcode-generator": "2.0.4"
+  }
 }

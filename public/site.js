@@ -16,7 +16,13 @@ for (const el of document.querySelectorAll('[data-split]')) {
   if (!badge) return;
   try {
     const res = await fetch('/api/site');
-    const { stage, lastChange } = await res.json();
+    const { stage, lastChange, publicUrl } = await res.json();
+    const link = document.getElementById('public-url');
+    if (link && publicUrl) {
+      link.href = publicUrl;
+      link.textContent = publicUrl.replace(/^https?:\/\//, '');
+      document.getElementById('qr-image').alt = `Código QR para entrar a ${publicUrl}`;
+    }
     badge.textContent = lastChange
       ? `Etapa ${stage} · último cambio ${new Date(lastChange).toLocaleString('es', { dateStyle: 'short', timeStyle: 'short' })}`
       : `Etapa ${stage} · aún sin commits`;

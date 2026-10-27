@@ -18,5 +18,9 @@
   {
     "message": "feat: página /bitacora con cada commit del proyecto, generada en history.json antes de cada commit",
     "date": "2026-10-27T20:01:48.000Z"
+  },
+  {
+    "message": "feat: QR de la portada con la dirección pública y comando npm run qr para la terminal",
+    "date": "2026-10-27T20:04:04.000Z"
   }
 ]

@@ -200,6 +200,41 @@ body {
   font-size: clamp(1rem, 0.8vw + 0.7rem, 1.4rem);
 }
 
+.qr-card {
+  margin: 1.5rem 0 0;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1rem 1.5rem 1rem 1rem;
+  border-radius: calc(var(--radius) * 1.25);
+  background: rgb(20 27 51 / 0.85);
+  border: 1px solid rgb(148 163 184 / 0.25);
+  text-align: left;
+}
+
+.qr-card img {
+  width: clamp(9rem, 12vw + 4rem, 15rem);
+  height: auto;
+  border-radius: 0.5rem;
+  background: #fff;
+}
+
+.qr-card figcaption {
+  display: grid;
+  gap: 0.35rem;
+  font-size: clamp(1rem, 0.8vw + 0.7rem, 1.5rem);
+}
+
+.qr-card a {
+  color: var(--yellow);
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 30rem) {
+  .qr-card { flex-direction: column; text-align: center; padding: 1rem; }
+}
+
 /* Sections */
 .panel {
   width: min(100% - 2rem, 64rem);

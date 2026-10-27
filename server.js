@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { openDb } from './db.js';
 import { isOffensive } from './filter.js';
 import { POLL, OPTION_IDS } from './poll.js';
+import { qrSvg } from './qr.js';
 
 const ROOT = fileURLToPath(new URL('.', import.meta.url));
 const PUBLIC_DIR = join(ROOT, 'public');
@@ -74,6 +75,18 @@ function visitorId(req, res) {
   return id;
 }
 
+const VALID_HOST = /^[a-z0-9.-]+(:\d{1,5})?$/i;
+
+// Public address for the QR code: configured URL, or the host the visitor used.
+function resolvePublicUrl(req, configured) {
+  if (configured) return configured;
+  const host = [req.headers['x-forwarded-host'], req.headers.host]
+    .map((value) => String(value ?? '').split(',')[0].trim())
+    .find((value) => VALID_HOST.test(value)) ?? 'localhost';
+  const proto = req.headers['x-forwarded-proto'] === 'https' ? 'https' : 'http';
+  return `${proto}://${host}`;
+}
+
 function sameSecret(given, expected) {
   // Hash both sides so timingSafeEqual always compares equal-length buffers.
   const a = createHash('sha256').update(String(given)).digest();
@@ -133,6 +146,8 @@ export function createApp({
   dbPath = process.env.DB_PATH || join(ROOT, 'data', 'evento.db'),
   adminKey = process.env.ADMIN_KEY || '',
   messageCooldownMs = 5_000,
+  publicUrl = process.env.PUBLIC_URL
+    || (process.env.RAILWAY_PUBLIC_DOMAIN ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}` : ''),
 } = {}) {
   const db = openDb(dbPath);
   const events = createEventHub();
@@ -190,7 +205,15 @@ export function createApp({
       if (req.method === 'GET' && pathname === '/api/site') {
         const history = await readHistory(historyPath);
         const last = history.at(-1);
-        return sendJson(res, 200, { stage: SITE.stage, lastChange: last ? last.date : null });
+        return sendJson(res, 200, {
+          stage: SITE.stage,
+          lastChange: last ? last.date : null,
+          publicUrl: resolvePublicUrl(req, publicUrl),
+        });
+      }
+      if (req.method === 'GET' && pathname === '/qr.svg') {
+        res.writeHead(200, { 'content-type': MIME['.svg'], 'cache-control': 'no-cache' });
+        return res.end(qrSvg(resolvePublicUrl(req, publicUrl)));
       }
       if (req.method === 'GET' && pathname === '/api/history') {
         return sendJson(res, 200, { commits: await readHistory(historyPath) });
