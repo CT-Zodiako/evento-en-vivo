@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1020">
+  <title>Bitácora · De chat a agente</title>
+  <meta name="description" content="Cada commit de la web de la charla De chat a agente, del primero al último.">
+  <link rel="icon" href="/favicon.svg">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main class="log-page">
+    <p><a class="back-link" href="/">← Volver a la portada</a></p>
+    <h1>Bitácora</h1>
+    <p class="panel-intro">Cada commit de esta web, del primero al último: así la construyó el agente, paso a paso.</p>
+    <ol class="timeline" id="timeline"></ol>
+    <p class="empty" id="timeline-empty" hidden>Todavía no hay commits.</p>
+  </main>
+  <aside class="stage-badge" id="stage-badge" aria-live="polite">Etapa … · cargando</aside>
+  <script src="/site.js"></script>
+  <script src="/bitacora.js"></script>
+</body>
+</html>

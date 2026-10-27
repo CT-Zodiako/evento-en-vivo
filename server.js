@@ -192,6 +192,12 @@ export function createApp({
         const last = history.at(-1);
         return sendJson(res, 200, { stage: SITE.stage, lastChange: last ? last.date : null });
       }
+      if (req.method === 'GET' && pathname === '/api/history') {
+        return sendJson(res, 200, { commits: await readHistory(historyPath) });
+      }
+      if (req.method === 'GET' && (pathname === '/bitacora' || pathname === '/bitacora/')) {
+        return await serveStatic(req, res, '/bitacora.html');
+      }
       if (req.method === 'GET' && pathname === '/api/events') return events.subscribe(req, res);
       if (req.method === 'GET' && pathname === '/api/messages') {
         return sendJson(res, 200, { messages: db.listMessages(), moderation: Boolean(adminKey) });

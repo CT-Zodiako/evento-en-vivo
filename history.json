@@ -14,5 +14,9 @@
   {
     "message": "feat: encuesta en vivo \"¿Para qué usarías un agente?\" con un voto por persona y barras por rol",
     "date": "2026-10-27T19:59:58.000Z"
+  },
+  {
+    "message": "feat: página /bitacora con cada commit del proyecto, generada en history.json antes de cada commit",
+    "date": "2026-10-27T20:01:48.000Z"
   }
 ]

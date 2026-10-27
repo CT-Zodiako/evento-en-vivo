@@ -498,6 +498,79 @@ body {
 
 .poll-total { margin: 1.25rem 0 0; color: var(--muted); }
 
+/* Log page */
+.log-page {
+  width: min(100% - 2rem, 48rem);
+  margin: 0 auto;
+  padding: 4.5rem 0 4rem;
+}
+
+.log-page h1 {
+  margin: 0;
+  font-size: clamp(2.5rem, 5vw + 1rem, 5rem);
+  line-height: 1.05;
+}
+
+.back-link {
+  color: var(--yellow);
+  font-weight: 700;
+}
+
+.timeline {
+  list-style: none;
+  margin: 2rem 0 0;
+  padding: 0 0 0 1.5rem;
+  border-left: 3px solid rgb(148 163 184 / 0.35);
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 1.5rem;
+  padding: 1rem 1.2rem;
+  border-radius: var(--radius);
+  background: rgb(20 27 51 / 0.85);
+  border: 1px solid rgb(148 163 184 / 0.25);
+}
+
+.timeline-item::before {
+  content: "";
+  position: absolute;
+  left: calc(-1.5rem - 9px);
+  top: 1.3rem;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--yellow);
+  box-shadow: 0 0 0 4px var(--bg);
+}
+
+.timeline-number {
+  margin-right: 0.6rem;
+  font-weight: 900;
+  color: var(--yellow);
+}
+
+.timeline-item time { color: var(--muted); }
+
+.timeline-message {
+  margin: 0.4rem 0 0;
+  font-size: clamp(1.05rem, 0.5vw + 0.9rem, 1.35rem);
+  overflow-wrap: anywhere;
+}
+
+.commit-type {
+  display: inline-block;
+  padding: 0.05rem 0.5rem;
+  border-radius: 0.4rem;
+  background: rgb(56 189 248 / 0.15);
+  color: var(--cyan);
+  font-size: 0.8em;
+  font-weight: 800;
+  font-family: ui-monospace, Menlo, monospace;
+}
+
+.type-fix { background: rgb(244 114 182 / 0.15); color: var(--pink); }
+
 @keyframes pop {
   from { opacity: 0; transform: scale(0.9); }
   to { opacity: 1; transform: none; }
