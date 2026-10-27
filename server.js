@@ -6,6 +6,7 @@ import { extname, join, normalize, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { openDb } from './db.js';
 import { isOffensive } from './filter.js';
+import { POLL, OPTION_IDS } from './poll.js';
 
 const ROOT = fileURLToPath(new URL('.', import.meta.url));
 const PUBLIC_DIR = join(ROOT, 'public');
@@ -60,9 +61,13 @@ async function readJson(req) {
 }
 
 // Each browser gets an anonymous id cookie, used for rate limiting and one vote per person.
+function readVisitorId(req) {
+  return /(?:^|;\s*)vid=([0-9a-f-]{36})/.exec(req.headers.cookie || '')?.[1] ?? null;
+}
+
 function visitorId(req, res) {
-  const match = /(?:^|;\s*)vid=([0-9a-f-]{36})/.exec(req.headers.cookie || '');
-  if (match) return match[1];
+  const existing = readVisitorId(req);
+  if (existing) return existing;
   const id = randomUUID();
   const secure = req.headers['x-forwarded-proto'] === 'https' ? '; Secure' : '';
   res.setHeader('set-cookie', `vid=${id}; Path=/; Max-Age=31536000; HttpOnly; SameSite=Lax${secure}`);
@@ -151,6 +156,26 @@ export function createApp({
     sendJson(res, 201, { message });
   }
 
+  function pollResults() {
+    const results = {};
+    for (const role of ROLES) results[role] = Object.fromEntries(POLL.options.map((o) => [o.id, 0]));
+    for (const { role, option, total } of db.voteCounts()) {
+      if (results[role] && OPTION_IDS.has(option)) results[role][option] = total;
+    }
+    return results;
+  }
+
+  async function postVote(req, res) {
+    const id = visitorId(req, res);
+    const { option, role } = await readJson(req);
+    if (!OPTION_IDS.has(option)) throw new HttpError(400, 'Opción no válida.');
+    if (!ROLES.has(role)) throw new HttpError(400, 'Elige si eres estudiante o profesor.');
+    if (!db.addVote(id, option, role)) throw new HttpError(409, 'Ya votaste. ¡Gracias por participar!');
+    const results = pollResults();
+    events.broadcast('poll', { results });
+    sendJson(res, 201, { results, myVote: option });
+  }
+
   function hideMessage(req, res, messageId) {
     if (!adminKey) throw new HttpError(503, 'La moderación está desactivada: falta configurar ADMIN_KEY.');
     if (!sameSecret(req.headers['x-admin-key'] ?? '', adminKey)) throw new HttpError(401, 'Clave incorrecta.');
@@ -172,6 +197,11 @@ export function createApp({
         return sendJson(res, 200, { messages: db.listMessages(), moderation: Boolean(adminKey) });
       }
       if (req.method === 'POST' && pathname === '/api/messages') return await postMessage(req, res);
+      if (req.method === 'GET' && pathname === '/api/poll') {
+        const voter = readVisitorId(req);
+        return sendJson(res, 200, { ...POLL, results: pollResults(), myVote: voter ? db.voteOf(voter) : null });
+      }
+      if (req.method === 'POST' && pathname === '/api/poll/vote') return await postVote(req, res);
       const hide = /^\/api\/messages\/(\d+)\/hide$/.exec(pathname);
       if (req.method === 'POST' && hide) return hideMessage(req, res, Number(hide[1]));
       if (pathname.startsWith('/api/')) throw new HttpError(404, 'Not found');

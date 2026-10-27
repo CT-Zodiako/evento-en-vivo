@@ -6,6 +6,8 @@
   --yellow: #facc15;
   --cyan: #38bdf8;
   --pink: #f472b6;
+  --bar-student: #0369a1;
+  --bar-teacher: #be185d;
   --radius: 1rem;
   color-scheme: dark;
 }
@@ -206,7 +208,7 @@ body {
   border-radius: calc(var(--radius) * 1.5);
   background: rgb(20 27 51 / 0.85);
   border: 1px solid rgb(148 163 184 / 0.25);
-  scroll-margin-top: 1rem;
+  scroll-margin-top: 4rem;
 }
 
 .panel h2 {
@@ -388,6 +390,113 @@ body {
   justify-content: flex-end;
   gap: 0.75rem;
 }
+
+/* Poll */
+.button-outline {
+  background: transparent;
+  color: var(--yellow);
+  box-shadow: inset 0 0 0 2px var(--yellow);
+}
+
+.poll-options {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 0.75rem;
+}
+
+.poll-option {
+  padding: 0.9rem 1rem;
+  border-radius: var(--radius);
+  border: 2px solid rgb(148 163 184 / 0.4);
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  font-size: clamp(1rem, 0.4vw + 0.9rem, 1.25rem);
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.poll-option:hover:not(:disabled) { border-color: var(--yellow); transform: translateY(-2px); }
+.poll-option:disabled { cursor: default; opacity: 0.55; }
+.poll-option[aria-pressed="true"] {
+  opacity: 1;
+  border-color: var(--yellow);
+  background: rgb(250 204 21 / 0.12);
+}
+.poll-option[aria-pressed="true"]::after { content: " ✓"; color: var(--yellow); }
+
+.poll-legend {
+  margin: 1.5rem 0 0.5rem;
+  display: flex;
+  gap: 1.25rem;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.legend::before {
+  content: "";
+  display: inline-block;
+  width: 0.9rem;
+  height: 0.9rem;
+  margin-right: 0.4rem;
+  border-radius: 0.25rem;
+  vertical-align: -0.1rem;
+}
+
+.legend-estudiante::before { background: var(--bar-student); }
+.legend-profesor::before { background: var(--bar-teacher); }
+
+.poll-results {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1.25rem;
+}
+
+.poll-label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-weight: 700;
+  font-size: clamp(1rem, 0.5vw + 0.85rem, 1.3rem);
+}
+
+.bar {
+  position: relative;
+  height: clamp(1.6rem, 1.5vw + 1rem, 2.4rem);
+  margin-top: 0.3rem;
+  border-radius: 0.5rem;
+  background: rgb(148 163 184 / 0.15);
+  overflow: hidden;
+}
+
+.bar-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0;
+  border-radius: 0.5rem;
+  transition: width 0.8s cubic-bezier(.2, .8, .2, 1);
+}
+
+.bar-estudiante .bar-fill { background: var(--bar-student); }
+.bar-profesor .bar-fill { background: var(--bar-teacher); }
+
+.bar-value {
+  position: absolute;
+  inset: 0 0.75rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  align-items: center;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+.poll-total { margin: 1.25rem 0 0; color: var(--muted); }
 
 @keyframes pop {
   from { opacity: 0; transform: scale(0.9); }
